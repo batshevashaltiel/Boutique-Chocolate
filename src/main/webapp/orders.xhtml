@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      dir="rtl">
+
+<h:head>
+    <title>ניהול הזמנות | בוטיק הקקאו</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Heebo', sans-serif; 
+            margin: 0; padding: 0; 
+            background-color: #f5f7fb; color: #333; 
+            display: flex; min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar { width: 260px; background-color: #3e2723; color: white; display: flex; flex-direction: column; padding: 20px 0; position: fixed; height: 100%; right: 0; top: 0; box-shadow: -2px 0 10px rgba(0,0,0,0.1); z-index: 1000; }
+        .brand { font-family: 'Playfair Display', serif; font-size: 1.8em; text-align: center; margin-bottom: 40px; color: #c5a059; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; }
+        .menu-item { padding: 15px 30px; color: rgba(255,255,255,0.8); text-decoration: none; font-size: 1.1em; transition: 0.3s; border-right: 4px solid transparent; display: block; cursor: pointer; }
+        .menu-item:hover, .menu-item.active { background-color: rgba(255,255,255,0.05); color: white; border-right-color: #c5a059; }
+        .menu-footer { margin-top: auto; padding: 20px; text-align: center; font-size: 0.85em; color: rgba(255,255,255,0.4); }
+        
+        /* Main Content */
+        .main-content { margin-right: 260px; flex: 1; padding: 40px; width: calc(100% - 260px); }
+        
+        /* Panel */
+        .panel { background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); padding: 30px; margin-bottom: 30px; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .panel-header h2 { margin: 0; color: #3e2723; font-family: 'Playfair Display', serif; }
+
+        /* Table */
+        table { width: 100%; border-collapse: collapse; border: 1px solid #e0e0e0; }
+        th { text-align: right; padding: 15px; background-color: #f9f9f9; color: #555; border-bottom: 2px solid #e0e0e0; border-left: 1px solid #e0e0e0; }
+        td { padding: 15px; border-bottom: 1px solid #e0e0e0; border-left: 1px solid #e0e0e0; vertical-align: middle; }
+        tr:hover { background-color: #fafafa; }
+        
+        /* Status Buttons */
+        .status-group { display: flex; gap: 5px; }
+        .btn-status { 
+            padding: 5px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; 
+            border: 1px solid transparent; cursor: pointer; opacity: 0.4; transition: 0.2s;
+        }
+        .btn-received { background-color: #e3f2fd; color: #1976d2; border-color: #bbdefb; }
+        .btn-received.active { opacity: 1; box-shadow: 0 2px 5px rgba(25, 118, 210, 0.3); transform: scale(1.05); }
+        .btn-closed { background-color: #ffebee; color: #d32f2f; border-color: #ffcdd2; }
+        .btn-closed.active { opacity: 1; box-shadow: 0 2px 5px rgba(211, 47, 47, 0.3); transform: scale(1.05); }
+
+        .btn-view-items { background: #3e2723; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.9em; border: none; cursor: pointer; }
+        .btn-view-items:hover { background: #5d4037; }
+
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-content { background: white; padding: 30px; border-radius: 10px; width: 400px; max-width: 90%; box-shadow: 0 5px 25px rgba(0,0,0,0.3); text-align: center; }
+        .items-list { text-align: right; margin: 20px 0; line-height: 1.8; font-size: 1.1em; color: #333; max-height: 300px; overflow-y: auto; }
+        .btn-close-modal { background: #757575; color: white; padding: 8px 20px; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="sidebar">
+        <div class="brand">בוטיק הקקאו</div>
+        <h:form>
+            <h:commandLink action="#{productBean.openAddMode}" styleClass="menu-item">
+               ➕ ניהול מוצרים (הוספה/עריכה)
+            </h:commandLink>
+            <h:commandLink action="orders?faces-redirect=true" styleClass="menu-item active">
+               📦 צפייה בהזמנות
+            </h:commandLink>
+            <h:outputLink value="products.xhtml" styleClass="menu-item">
+               🌐 צפייה בקטלוג
+            </h:outputLink>
+            <h:commandLink action="#{loginBean.logout}" styleClass="menu-item">
+               🚪 יציאה
+            </h:commandLink>
+        </h:form>
+        <div class="menu-footer">שלום, #{loginBean.name}</div>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="panel">
+            <div class="panel-header">
+                <h2>ניהול הזמנות</h2>
+            </div>
+            
+            <h:form id="ordersForm">
+                <h:dataTable value="#{cartBean.allOrders}" var="o">
+                    <h:column>
+                        <f:facet name="header">מס' הזמנה</f:facet>
+                        <span style="color: #c5a059; font-weight: bold;">##{o.confirmationNumber != 0 ? o.confirmationNumber : o.id}</span>
+                    </h:column>
+                    
+                    <h:column>
+                        <f:facet name="header">שם משתמש (מייל)</f:facet>
+                        <strong>#{o.customerName}</strong>
+                    </h:column>
+                    
+                    <h:column>
+                        <f:facet name="header">פירוט הזמנה</f:facet>
+                        <h:commandButton value="📄 צפייה בפריטים" action="#{cartBean.viewOrderDetails(o)}" styleClass="btn-view-items">
+                            <f:ajax render=":detailsModal" />
+                        </h:commandButton>
+                    </h:column>
+                    
+                    <h:column>
+                        <f:facet name="header">סה"כ לתשלום</f:facet>
+                        ₪#{o.totalPrice}
+                    </h:column>
+                    
+                    <h:column>
+                        <f:facet name="header">תאריך הזמנה</f:facet>
+                        <h:outputText value="#{o.orderDate}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="Asia/Jerusalem"/>
+                        </h:outputText>
+                    </h:column>
+                    
+                    <h:column>
+                        <f:facet name="header">סטטוס</f:facet>
+                        <div class="status-group">
+                            <h:commandButton value="התקבל" 
+                                             action="#{cartBean.setOrderStatus(o, 'התקבל')}" 
+                                             styleClass="btn-status btn-received #{o.status == 'התקבל' ? 'active' : ''}">
+                                <f:ajax render="@form"/>
+                            </h:commandButton>
+                            
+                            <h:commandButton value="נסגר" 
+                                             action="#{cartBean.setOrderStatus(o, 'נסגר')}" 
+                                             styleClass="btn-status btn-closed #{o.status == 'נסגר' ? 'active' : ''}">
+                                <f:ajax render="@form"/>
+                            </h:commandButton>
+                        </div>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </div>
+    </div>
+
+    <h:panelGroup id="detailsModal">
+        <h:panelGroup rendered="#{not empty cartBean.selectedOrderForView}" styleClass="modal-overlay">
+            <div class="modal-content">
+                <h2 style="color: #3e2723; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                    פירוט הזמנה ##{cartBean.selectedOrderForView.confirmationNumber != 0 ? cartBean.selectedOrderForView.confirmationNumber : cartBean.selectedOrderForView.id}
+                </h2>
+                
+                <div class="items-list">
+                    • <h:outputText value="#{cartBean.formattedItemsSummary}" escape="false" />
+                </div>
+                
+                <h:form>
+                    <h:commandButton value="סגור" action="#{cartBean.closeOrderDetails}" styleClass="btn-close-modal">
+                        <f:ajax render=":detailsModal" />
+                    </h:commandButton>
+                </h:form>
+            </div>
+        </h:panelGroup>
+    </h:panelGroup>
+
+</h:body>
+</html>

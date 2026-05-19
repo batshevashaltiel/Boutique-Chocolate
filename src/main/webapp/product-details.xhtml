@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      dir="rtl">
+
+<f:metadata>
+    <f:viewAction action="#{productBean.loadProduct}" />
+</f:metadata>
+
+<h:head>
+    <title>#{productBean.selectedProduct.name} | בוטיק הקקאו</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body { 
+            font-family: 'Heebo', sans-serif; 
+            margin: 0; padding: 0; 
+            background-color: #f5f0e1; 
+            color: #3e2723;
+            display: flex; flex-direction: column; min-height: 100vh;
+        }
+        
+        .navbar { 
+            background-color: rgba(62, 39, 35, 0.98); color: white; padding: 10px 40px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
+            height: 60px; /* גובה קבוע לתפריט */
+            box-sizing: border-box;
+        }
+        .navbar h2 { margin: 0; font-family: 'Playfair Display', serif; letter-spacing: 1px; font-size: 1.5em; cursor: pointer; }
+        
+        .nav-btn { padding: 6px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; text-decoration: none; border: 1px solid transparent; font-size: 0.9em; }
+        .btn-gold { background-color: #c5a059; color: white; }
+        .btn-outline { background: transparent; border: 1px solid white; color: white; }
+
+        .container { 
+            width: 60%; 
+            max-width: 1200px; 
+            margin: 50px auto; 
+            padding: 0 20px; 
+            display: flex; 
+            justify-content: center; 
+            flex: 1; 
+        }
+        
+        .product-card { 
+            background: white; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2); 
+            display: flex; 
+            overflow: hidden; 
+            width: 100%;
+            height: 500px; 
+        }
+        
+        .prod-image { flex: 1.2; background-color: #eee; }
+        .prod-image img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .prod-details { 
+            flex: 0.8; 
+            padding: 40px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+        }
+        
+        .prod-title { font-family: 'Playfair Display', serif; font-size: 2.8em; margin-bottom: 15px; color: #3e2723; line-height: 1.1; }
+        .prod-category { color: #8d6e63; font-weight: bold; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; font-size: 1em; }
+        .prod-desc { font-size: 1.1em; line-height: 1.6; color: #5d4037; margin-bottom: 30px; }
+        .prod-price { font-size: 2.2em; font-weight: bold; color: #c5a059; margin-bottom: 30px; }
+        
+        .btn-add { 
+            background-color: #4CAF50; color: white; padding: 15px 30px; border: none; 
+            border-radius: 50px; font-size: 1.2em; font-weight: bold; cursor: pointer; transition: 0.3s; 
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3); width: 100%; text-align: center;
+        }
+        .btn-add:hover { background-color: #388E3C; transform: translateY(-3px); }
+
+        /* --- הוספתי את מחלקות ה-CSS לפוטר החדש --- */
+        .footer { background-color: #3e2723; color: #ecdec0; padding: 60px 0 20px; margin-top: auto; width: 100%; position: relative; z-index: 2; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; padding: 0 20px; text-align: right; }
+        .footer-section h3 { color: #c5a059; font-family: 'Playfair Display', serif; font-size: 1.4em; margin-bottom: 20px; border-bottom: 1px solid #5d4037; padding-bottom: 10px; }
+        .copyright { text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid #5d4037; font-size: 0.85em; color: #8d6e63; }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="navbar">
+        <h2 onclick="location.href='products.xhtml'">בוטיק הקקאו</h2>
+        <h:form styleClass="nav-buttons" style="display: flex; gap: 10px;">
+            <h:button value="חזרה לקטלוג" outcome="products" styleClass="nav-btn btn-gold" />
+            
+            <h:panelGroup rendered="#{loginBean.loggedIn}">
+                <h:button value="ניהול" outcome="admin" rendered="#{loginBean.admin}" styleClass="nav-btn btn-gold"/>
+                <h:commandButton value="סל קניות (#{cartBean.cartItems.size()})" action="cart?faces-redirect=true" rendered="#{!loginBean.admin}" styleClass="nav-btn btn-gold"/>
+                <h:commandButton value="יציאה" action="#{loginBean.logout}" styleClass="nav-btn btn-outline" />
+            </h:panelGroup>
+            
+             <h:button value="התחברות" outcome="login" rendered="#{!loginBean.loggedIn}" styleClass="nav-btn btn-gold" />
+        </h:form>
+    </div>
+
+    <div class="container">
+        <h:panelGroup rendered="#{productBean.selectedProduct != null}" style="width: 100%;">
+            <div class="product-card">
+                <div class="prod-image">
+                    <img src="#{empty productBean.selectedProduct.imageUrl ? 'https://via.placeholder.com/500' : productBean.selectedProduct.imageUrl}" />
+                </div>
+                <div class="prod-details">
+                    <div class="prod-category">#{productBean.selectedProduct.category}</div>
+                    <div class="prod-title">#{productBean.selectedProduct.name}</div>
+                    <div class="prod-desc">#{productBean.selectedProduct.description}</div>
+                    <div class="prod-price">₪#{productBean.selectedProduct.price}</div>
+                    
+                    <h:form>
+                        <h:commandButton value="הוסף לסל" 
+                                         action="#{cartBean.addToCart(productBean.selectedProduct.id)}"
+                                         rendered="#{loginBean.loggedIn and !loginBean.admin}" 
+                                         styleClass="btn-add"/>
+                                         
+                        <h:button value="התחבר כדי לקנות" 
+                                  outcome="login" 
+                                  rendered="#{!loginBean.loggedIn}" 
+                                  styleClass="btn-add" style="background-color: #8d6e63; text-align:center; display:block; text-decoration:none;"/>
+                    </h:form>
+                </div>
+            </div>
+        </h:panelGroup>
+        
+        <h:panelGroup rendered="#{productBean.selectedProduct == null}">
+            <div style="text-align: center;">
+                <h1 style="color: #5d4037; font-size: 3em;">המוצר לא נמצא... 🍫</h1>
+                <div style="margin-top: 20px;">
+                    <a href="products.xhtml" style="color: #c5a059; font-weight: bold; font-size: 1.5em;">חזור לקטלוג</a>
+                </div>
+            </div>
+        </h:panelGroup>
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>בוטיק הקקאו</h3>
+                <p>שוקולד בלגי משובח בעבודת יד.</p>
+            </div>
+            <div class="footer-section">
+                <h3>צור קשר</h3>
+                <p>📍בן אליעזר 2, בית שמש</p>
+                <p>📞 058-3249199</p>
+            </div>
+            <div class="footer-section">
+                <h3>שעות פעילות</h3>
+                <p>א'-ה': 08:00 - 22:00</p>
+            </div>
+        </div>
+        <div class="copyright">© 2026 בוטיק הקקאו</div>
+    </div>
+</h:body>
+</html>

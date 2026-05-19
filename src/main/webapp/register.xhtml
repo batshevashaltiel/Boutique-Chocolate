@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      dir="rtl">
+<h:head>
+    <title>הרשמה | הטראפל המוזהב</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f5e6d3; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .register-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; width: 350px; border-top: 5px solid #3e2723; }
+        h2 { color: #3e2723; margin-bottom: 25px; }
+        .input-group { text-align: right; margin-bottom: 15px; }
+        .input-field { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 1em; }
+        .btn-reg { background-color: #3e2723; color: white; padding: 12px; width: 100%; border: none; border-radius: 6px; cursor: pointer; font-size: 1.1em; font-weight: bold; margin-top: 10px; transition: 0.3s; }
+        .btn-reg:hover { background-color: #5d4037; }
+        .link-back { display: block; margin-top: 20px; color: #795548; text-decoration: none; font-size: 0.9em; }
+        .error-msg { color: #d32f2f; font-size: 0.9em; list-style: none; padding: 0; }
+    </style>
+</h:head>
+<h:body>
+    <div class="register-card">
+        <h2>יצירת חשבון חדש ✨</h2>
+        <h:form id="registerForm">
+            <div class="input-group">
+                <h:outputLabel value="אימייל:" />
+                <h:inputText id="email" value="#{loginBean.email}" styleClass="input-field" required="true" requiredMessage="חובה להזין אימייל">
+                    <f:validateRegex pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" />
+                </h:inputText>
+            </div>
+            
+            <div class="input-group">
+                <h:outputLabel value="סיסמה:" />
+                <h:inputSecret id="password" value="#{loginBean.password}" styleClass="input-field" required="true" requiredMessage="חובה להזין סיסמה" />
+            </div>
+            
+            <h:commandButton value="הירשם והמשך לקניות" action="#{loginBean.register}" styleClass="btn-reg" />
+            
+            <h:link value="כבר יש לך חשבון? התחבר כאן" outcome="login" styleClass="link-back" />
+            
+            <h:messages styleClass="error-msg" />
+        </h:form>
+    </div>
+</h:body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      dir="rtl"> 
+<h:head>
+    <title>בוטיק הקקאו | שוקולד פרימיום</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+    
+    <style>
+        html, body { height: 100%; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Heebo', sans-serif; 
+            color: #3e2723; 
+            background-color: #f5f0e1; 
+            background-image: none;
+            display: flex; flex-direction: column; min-height: 100vh;
+        }
+        
+        .header-wrapper { position: fixed; top: 0; left: 0; width: 100%; z-index: 2000; background-color: #f5f0e1; }
+        .top-bar { background-color: #c5a059; color: #3e2723; text-align: center; padding: 5px 0; font-size: 0.85em; font-weight: bold; }
+        .navbar { background-color: rgba(62, 39, 35, 0.98); color: white; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); gap: 15px; }
+        .hero { height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #ecdec0; background: linear-gradient(135deg, #5d4037, #3e2723); box-shadow: 0 5px 15px rgba(0,0,0,0.2); border-radius: 0 0 15px 15px; }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: 2em; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .hero p { font-size: 0.9em; margin-top: 2px; font-weight: 300; color: #d7ccc8; }
+        .container { margin-top: 190px; max-width: 1200px; margin-left: auto; margin-right: auto; padding: 20px; position: relative; z-index: 1; flex: 1; width: 100%; box-sizing: border-box; }
+        .navbar h2 { margin: 0; font-family: 'Playfair Display', serif; font-size: 1.5em; cursor: pointer; white-space: nowrap; }
+        .center-nav { display: flex; align-items: center; gap: 15px; flex-grow: 1; justify-content: center; flex-wrap: wrap; }
+        .category-filter-nav { display: flex; gap: 10px; overflow-x: auto; padding: 5px 0; white-space: nowrap; align-items: center; }
+        .category-filter-nav::-webkit-scrollbar { display: none; }
+        .cat-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 6px 15px; border-radius: 50px; cursor: pointer; font-weight: bold; color: #ecdec0; transition: 0.3s; font-size: 0.95em; }
+        .cat-btn:hover, .cat-btn.active { background: #c5a059; color: #3e2723; border-color: #c5a059; }
+        .nav-search { padding: 6px 15px; border-radius: 20px; border: none; font-family: inherit; width: 220px; font-size: 0.95em; background: rgba(255,255,255,0.9); transition: 0.3s; }
+        .nav-search:focus { background: white; outline: none; box-shadow: 0 0 5px #c5a059; }
+        .left-nav { display: flex; gap: 10px; align-items: center; }
+        .nav-buttons { display: flex; gap: 10px; align-items: center; }
+        .nav-btn { padding: 6px 12px; border-radius: 4px; border: 1px solid transparent; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-block; font-size: 0.9em; }
+        .btn-gold { background-color: #c5a059; color: white; border-color: #c5a059; }
+        .btn-outline { background-color: transparent; color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.4); }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        .card { background: rgba(255, 255, 255, 0.95); border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.2); transition: transform 0.3s; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-5px); }
+        .card-img-link { display: block; overflow: hidden; height: 220px; }
+        .card-img-top { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .card-img-link:hover .card-img-top { transform: scale(1.05); }
+        .card-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-title-link { text-decoration: none; color: inherit; }
+        .card-title { font-size: 1.3em; font-weight: bold; margin: 0 0 8px; color: #3e2723; transition: color 0.2s; }
+        .card-title-link:hover .card-title { color: #c5a059; }
+        .card-desc { font-size: 0.95em; color: #5d4037; margin-bottom: 10px; flex-grow: 1; line-height: 1.5; }
+        .category-tag { background: #efebe9; color: #5d4037; font-size: 0.8em; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 5px; width: fit-content; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 15px; border-top: 1px solid #eee; }
+        .price { font-size: 1.4em; font-weight: bold; color: #3e2723; }
+        .btn-action { padding: 10px 22px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; color: white; }
+        .btn-buy { background-color: #4CAF50; }
+        .btn-delete { background-color: #ff5252; padding: 6px 12px; font-size: 0.85em; }
+        .footer { background-color: #3e2723; color: #ecdec0; padding: 60px 0 20px; margin-top: auto; width: 100%; position: relative; z-index: 2; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; padding: 0 20px; text-align: right; }
+        .footer-section h3 { color: #c5a059; font-family: 'Playfair Display', serif; font-size: 1.4em; margin-bottom: 20px; border-bottom: 1px solid #5d4037; padding-bottom: 10px; }
+        .copyright { text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid #5d4037; font-size: 0.85em; color: #8d6e63; }
+        .category-alert-banner { background-color: #ffebee; color: #c62828; border: 1px solid #ffcdd2; padding: 15px; text-align: center; border-radius: 8px; font-weight: bold; font-size: 1.2em; margin-bottom: 25px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); animation: fadeIn 0.5s; }
+        #snackbar { visibility: hidden; min-width: 300px; background-color: #333; color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 1.1rem; box-shadow: 0 5px 20px rgba(0,0,0,0.4); }
+        #snackbar.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+        
+        /* עיצוב פונט SweetAlert להתאמה מושלמת לאתר */
+        .swal2-popup { font-family: 'Heebo', sans-serif !important; }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script type="text/javascript">
+        function showToast(data) {
+            if (data.status === 'success') {
+                var x = document.getElementById("snackbar");
+                x.className = "show";
+                setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+            }
+        }
+
+        // פונקציית המחיקה המעוצבת לקטלוג
+        function confirmCatalogDeletion(btn, productName) {
+            Swal.fire({
+                title: 'מחיקת מוצר',
+                text: "האם אתה בטוח שברצונך למחוק את המצר '" + productName + "' לצמיתות מהאתר?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff5252', // אדום התואם לכפתור המקורי שלך
+                cancelButtonColor: '#c5a059',  // זהב בוטיק
+                confirmButtonText: 'כן, מחק',
+                cancelButtonText: 'ביטול'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    btn.nextElementSibling.click(); // לחיצה על כפתור ה-JSF הנסתר
+                }
+            });
+            return false;
+        }
+    </script>
+</h:head>
+
+<h:body>
+    <div class="header-wrapper">
+        <div class="top-bar">להזמנות: 058-3249199</div>
+
+        <div class="navbar">
+            <div style="width: 50px;"></div>
+            
+            <div class="center-nav">
+                <h:form id="filterForm" style="display:flex; align-items:center; gap:10px;">
+                    <div class="category-filter-nav">
+                        <h:commandButton value="הכל" action="#{productBean.filterByCategory('הכל')}" styleClass="cat-btn #{productBean.selectedCategoryFilter == 'הכל' ? 'active' : ''}">
+                            <f:ajax render=":productsArea :filterForm" />
+                        </h:commandButton>
+                        
+                        <ui:repeat value="#{productBean.categoriesList}" var="cat">
+                            <h:commandButton value="#{cat}" action="#{productBean.filterByCategory(cat)}" styleClass="cat-btn #{productBean.selectedCategoryFilter == cat ? 'active' : ''}">
+                                <f:ajax render=":productsArea :filterForm" />
+                            </h:commandButton>
+                        </ui:repeat>
+                    </div>
+                </h:form>
+                
+                <h:form>
+                    <h:inputText value="#{productBean.searchTerm}" styleClass="nav-search">
+                        <f:passThroughAttribute name="placeholder" value="חיפוש חופשי..." />
+                        <f:ajax event="keyup" execute="@this" render=":productsArea" />
+                    </h:inputText>
+                </h:form>
+            </div>
+
+            <div class="left-nav">
+                <h:form id="headerForm" styleClass="nav-buttons">
+                    <h:panelGroup rendered="#{loginBean.loggedIn}">
+                        <h:commandButton id="cartBtn" value="סל (#{cartBean.cartItems.size()})" action="cart?faces-redirect=true" rendered="#{!loginBean.admin}" styleClass="nav-btn btn-gold"/>
+                        <h:button value="ניהול" outcome="admin" rendered="#{loginBean.admin}" styleClass="nav-btn btn-gold"/>
+                        <h:commandButton value="יציאה" action="#{loginBean.logout}" styleClass="nav-btn btn-outline" />
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{!loginBean.loggedIn}">
+                        <h:button value="התחברות" outcome="login" styleClass="nav-btn btn-gold" />
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+
+        <div class="hero">
+            <h1>Cocoa Boutique</h1>
+            <p>חווית שוקולד בלגי בלתי נשכחת</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <h:panelGroup id="productsArea">
+
+            <h:panelGroup rendered="#{empty productBean.products}">
+                <div style="text-align: center; font-size: 1.5em; color: #3e2723; margin-top: 50px;">לא נמצאו תוצאות...</div>
+            </h:panelGroup>
+
+            <h:form id="productsForm">
+                <div class="products-grid">
+                    <ui:repeat value="#{productBean.products}" var="p">
+                        <div class="card">
+                            <h:outputLink value="product-details.xhtml" styleClass="card-img-link">
+                                <f:param name="id" value="#{p.id}" />
+                                <img src="#{empty p.imageUrl ? 'https://images.unsplash.com/photo-1548907040-4baa42d10919?w=500&amp;auto=format&amp;fit=crop&amp;q=60' : p.imageUrl}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1548907040-4baa42d10919?w=500&amp;auto=format&amp;fit=crop&amp;q=60';" class="card-img-top" alt="שוקולד" />
+                            </h:outputLink>
+                            
+                            <div class="card-body">
+                                <div class="category-tag">#{p.category}</div>
+                                <h:outputLink value="product-details.xhtml" styleClass="card-title-link">
+                                    <f:param name="id" value="#{p.id}" />
+                                    <div class="card-title">#{p.name}</div>
+                                </h:outputLink>
+                                <div class="card-desc">#{p.description}</div>
+                                <div class="card-footer">
+                                    <span class="price">₪#{p.price}</span>
+                                    
+                                    <h:panelGroup rendered="#{loginBean.admin}">
+                                        <button type="button" class="btn-action btn-delete" onclick="return confirmCatalogDeletion(this, '#{p.name}');">מחק</button>
+                                        <h:commandButton action="#{productBean.deleteProduct(p.id)}" style="display:none;">
+                                            <f:ajax execute="@this" render="@form" />
+                                        </h:commandButton>
+                                    </h:panelGroup>
+                                    
+                                    <h:panelGroup rendered="#{!loginBean.admin}">
+                                        <h:commandButton value="הוסף לסל" action="#{cartBean.addToCart(p.id)}" rendered="#{loginBean.loggedIn}" styleClass="btn-action btn-buy">
+                                            <f:ajax execute="@this" render=":headerForm" onevent="showToast" />
+                                        </h:commandButton>
+                                        <h:button value="הוסף לסל" outcome="login" rendered="#{!loginBean.loggedIn}" styleClass="btn-action btn-buy"/> 
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+                    </ui:repeat>
+                </div>
+            </h:form>
+        </h:panelGroup>
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>בוטיק הקקאו</h3>
+                <p>שוקולד בלגי משובח בעבודת יד.</p>
+            </div>
+            <div class="footer-section">
+                <h3>צור קשר</h3>
+                <p>📍בן אליעזר 2, בית שמש</p>
+                <p>📞 058-3249199</p>
+            </div>
+            <div class="footer-section">
+                <h3>שעות פעילות</h3>
+                <p>א'-ה': 08:00 - 22:00</p>
+            </div>
+        </div>
+        <div class="copyright">© 2026 בוטיק הקקאו</div>
+    </div>
+
+    <div id="snackbar">המוצר נוסף לסל בהצלחה!</div>
+</h:body>
+</html>

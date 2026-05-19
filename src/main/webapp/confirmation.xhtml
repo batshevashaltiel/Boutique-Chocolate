@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      dir="rtl">
+
+<h:head>
+    <title>אישור הזמנה | בוטיק הקקאו</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+    
+    <style>
+        body { 
+            font-family: 'Heebo', sans-serif; margin: 0; padding: 0; color: #3e2723; 
+            background-color: #f5f0e1;
+            display: flex; flex-direction: column; min-height: 100vh;
+        }
+        
+        .header-wrapper { position: fixed; top: 0; left: 0; width: 100%; z-index: 2000; }
+        .top-bar { background-color: #c5a059; color: #3e2723; text-align: center; padding: 8px 0; font-size: 0.9em; font-weight: bold; width: 100%; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .navbar { background-color: rgba(62, 39, 35, 0.98); color: white; padding: 10px 40px; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); width: 100%; box-sizing: border-box;}
+        .navbar h2 { margin: 0; font-family: 'Playfair Display', serif; letter-spacing: 1px; font-size: 1.8em; cursor: pointer; }
+        
+        .content-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 120px;
+            padding: 20px;
+        }
+
+        .success-card {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            border-top: 6px solid #4CAF50;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .success-icon {
+            font-size: 5em;
+            color: #4CAF50;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 10px rgba(76, 175, 80, 0.2);
+        }
+
+        h1 {
+            color: #3e2723;
+            font-family: 'Playfair Display', serif;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 2.2em;
+        }
+        
+        .order-number {
+            color: #c5a059; 
+            font-size: 1.5em; 
+            margin-bottom: 25px; 
+            border: 2px dashed #eee; 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 1.1em;
+            color: #5d4037;
+            line-height: 1.6;
+            margin-bottom: 35px;
+        }
+
+        .btn-back {
+            background-color: #c5a059;
+            color: white;
+            padding: 12px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            display: inline-block;
+            border: 2px solid #c5a059;
+        }
+
+        .btn-back:hover {
+            background-color: transparent;
+            color: #c5a059;
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="header-wrapper">
+        <div class="top-bar">להזמנות: 058-3249199</div>
+
+        <div class="navbar">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <h2 onclick="location.href='products.xhtml'">בוטיק הקקאו</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-area">
+        <div class="success-card">
+            <div class="success-icon">✔️</div>
+            <h1>ההזמנה התקבלה!</h1>
+            
+            <div class="order-number">
+                מספר הזמנה: #{cartBean.allOrders[0].confirmationNumber}
+            </div>
+            
+            <p>
+                תודה שבחרת בבוטיק הקקאו! <br/>
+                הזמנתך נקלטה במערכת בהצלחה ותועבר להכנה בהקדם.<br/>
+                העתק של פרטי ההזמנה מחכה לך בחשבונך.
+            </p>
+            <h:link outcome="products" value="חזרה לקטלוג המוצרים" styleClass="btn-back" />
+        </div>
+    </div>
+</h:body>
+</html>

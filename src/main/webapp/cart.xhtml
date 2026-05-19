@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      dir="rtl">
+
+<h:head>
+    <title>סל הקניות שלי | בוטיק הקקאו</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+    
+    <style>
+        body { 
+            font-family: 'Heebo', sans-serif; margin: 0; padding: 0; color: #3e2723; 
+            padding-top: 100px;
+            background-image: url('https://images.unsplash.com/photo-1606312619070-d48b4c652a52?q=80&amp;w=2070&amp;auto=format&amp;fit=crop');
+            background-attachment: fixed; background-position: center; background-repeat: no-repeat; background-size: cover;
+        }
+        
+        .top-bar { background-color: #c5a059; color: #3e2723; text-align: center; padding: 8px 0; font-size: 0.9em; font-weight: bold; letter-spacing: 0.5px; position: fixed; top: 0; left: 0; width: 100%; z-index: 2001; }
+        .navbar { background-color: rgba(62, 39, 35, 0.95); color: white; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); position: fixed; top: 35px; left: 0; width: 100%; z-index: 2000; backdrop-filter: blur(5px); box-sizing: border-box;}
+        .navbar h2 { margin: 0; font-family: 'Playfair Display', serif; letter-spacing: 1px; font-size: 1.8em; cursor: pointer; }
+        .nav-buttons { display: flex; gap: 15px; align-items: center; }
+        .nav-btn { padding: 8px 20px; font-size: 0.95rem; border-radius: 4px; border: 1px solid transparent; cursor: pointer; font-family: 'Heebo', sans-serif; font-weight: bold; transition: all 0.3s ease; text-decoration: none; display: inline-block; line-height: 1.2; letter-spacing: 0.5px; }
+        .nav-btn:hover { transform: translateY(-1px); }
+        .btn-gold { background-color: #c5a059; color: white; border-color: #c5a059; }
+        .btn-outline { background-color: transparent; color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.4); }
+        .btn-outline:hover { background-color: rgba(255,255,255,0.1); color: white; border-color: white; }
+
+        .cart-container { max-width: 950px; margin: 40px auto; padding: 20px; position: relative; z-index: 2; min-height: 500px; }
+        .cart-card { background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
+        h1 { border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; margin-bottom: 25px; color: #3e2723; font-family: 'Playfair Display', serif; }
+        
+        .cart-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        .cart-table th { text-align: right; padding: 15px; border-bottom: 2px solid #c5a059; color: #5d4037; font-weight: bold; }
+        .cart-table td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        .product-img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd; }
+        .qty-wrapper { display: flex; align-items: center; gap: 10px; }
+        .qty-input { width: 50px; padding: 5px; text-align: center; font-size: 1.1em; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; }
+        
+        .btn-update { background-color: #ccc; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: default; font-weight: bold; font-size: 0.9em; transition: 0.3s; }
+        .btn-update.active { background-color: #3e2723; cursor: pointer; }
+        .btn-update.active:hover { background-color: #5d4037; }
+
+        .stock-display { font-size: 0.85em; color: #795548; background: #efebe9; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 5px; }
+        .btn-remove { background: white; border: 1px solid #ef5350; color: #ef5350; padding: 6px 14px; border-radius: 4px; cursor: pointer; transition: 0.2s; font-weight: bold; font-size: 0.9em; }
+        .btn-remove:hover { background: #ffebee; }
+        .cart-summary { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #c5a059; }
+        .total-label { font-size: 1.3em; font-weight: bold; color: #3e2723; }
+        .total-amount { font-size: 1.5em; font-weight: bold; color: #3e2723; }
+        .btn-checkout { background-color: #4CAF50; color: white; padding: 12px 40px; border-radius: 50px; border: none; cursor: pointer; font-size: 1.1em; font-weight: bold; transition: 0.3s; }
+        .btn-checkout:hover { background-color: #45a049; }
+
+        .footer { background-color: #3e2723; color: #ecdec0; padding: 60px 0 20px; margin-top: 80px; position: relative; z-index: 2; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; padding: 0 20px; text-align: right; }
+        .footer-section h3 { color: #c5a059; font-family: 'Playfair Display', serif; font-size: 1.4em; margin-bottom: 20px; border-bottom: 2px solid #5d4037; padding-bottom: 10px; display: inline-block; }
+        .footer-section p, .footer-section a { color: #d7ccc8; font-size: 0.95em; line-height: 1.8; text-decoration: none; display: block; margin-bottom: 8px; transition: 0.3s; }
+        .footer-section a:hover { color: #fff; padding-right: 5px; }
+        .newsletter-input { width: 100%; padding: 10px; border: none; border-radius: 4px; margin-bottom: 10px; font-family: inherit; }
+        .newsletter-btn { background-color: #c5a059; color: #3e2723; border: none; padding: 10px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; transition: 0.3s; }
+        .copyright { text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid #5d4037; font-size: 0.85em; color: #8d6e63; }
+    </style>
+
+    <script type="text/javascript">
+        function enableUpdateBtn(input) {
+            var btn = input.nextElementSibling;
+            if (input.value > 0) {
+                btn.classList.add('active');
+                btn.disabled = false;
+            } else {
+                btn.classList.remove('active');
+                btn.disabled = true;
+            }
+        }
+    </script>
+</h:head>
+
+<h:body>
+    <div class="top-bar">להזמנות: 058-3249199</div>
+
+    <div class="navbar">
+        <h2 onclick="location.href='products.xhtml'">בוטיק הקקאו</h2>
+        <h:form styleClass="nav-buttons">
+            <h:button value="חזרה לקטלוג" outcome="products" styleClass="nav-btn btn-gold" />
+            <h:commandButton value="יציאה" action="#{loginBean.logout}" styleClass="nav-btn btn-outline" />
+        </h:form>
+    </div>
+
+    <div class="cart-container">
+        <div class="cart-card">
+            <h1>סל הקניות שלי 🛒</h1>
+            <h:messages globalOnly="true" style="color:#d32f2f; list-style:none; padding:10px; background:#ffebee; border-radius:4px; margin-bottom:20px; font-weight:bold; text-align:center;"/>
+
+            <h:panelGroup rendered="#{empty cartBean.cartItems}">
+                <div style="text-align: center; padding: 50px;">
+                    <h2>הסל ריק...</h2>
+                    <h:button value="חזור לקטלוג" outcome="products" styleClass="nav-btn btn-gold" />
+                </div>
+            </h:panelGroup>
+
+            <h:panelGroup rendered="#{not empty cartBean.cartItems}">
+                <h:form id="cartForm">
+                    <h:dataTable value="#{cartBean.cartItems}" var="item" styleClass="cart-table">
+                        <h:column>
+                            <f:facet name="header">מוצר</f:facet>
+                            <img src="#{empty item.product.imageUrl ? 'https://via.placeholder.com/100' : item.product.imageUrl}" onerror="this.onerror=null; this.src='https://via.placeholder.com/100';" class="product-img" />
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">פרטים</f:facet>
+                            <span class="product-name">#{item.product.name}</span>
+                            <br/>
+                            <span class="stock-display">במלאי: #{item.product.quantity}</span>
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">מחיר</f:facet>
+                            ₪#{item.product.price}
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">כמות</f:facet>
+                            
+                            <h:panelGroup rendered="#{item.product.quantity gt 0}">
+                                <div class="qty-wrapper">
+                                    <h:inputText value="#{item.quantity}" styleClass="qty-input" 
+             p:type="number" 
+             p:min="1" 
+             p:max="#{item.product.quantity}"
+             p:oninvalid="this.setCustomValidity(this.value > #{item.product.quantity} ? 'קיים במלאי רק #{item.product.quantity} יחידות' : 'הכמות חייבת להיות 1 ומעלה')"
+             p:oninput="this.setCustomValidity('')"
+             onkeyup="enableUpdateBtn(this)" 
+             onchange="enableUpdateBtn(this)" />
+                                    
+                                    <h:commandButton value="עדכון" 
+                                                     action="#{cartBean.updateQuantity(item)}" 
+                                                     styleClass="btn-update"
+                                                     disabled="true" />
+                                </div>
+                            </h:panelGroup>
+                            
+                            <h:panelGroup rendered="#{item.product.quantity le 0}">
+                                <span style="color: #ef5350; font-weight: bold; background: #ffebee; padding: 5px 10px; border-radius: 4px; display: inline-block;">
+                                    🚫 אזל מהמלאי (אנא הסר)
+                                </span>
+                            </h:panelGroup>
+                        </h:column>
+
+                        <h:column>
+                            <f:facet name="header">סה"כ</f:facet>
+                            <strong>₪#{item.product.price * item.quantity}</strong>
+                        </h:column>
+                        
+                        <h:column>
+                            <f:facet name="header">מחיקה</f:facet>
+                            <h:commandButton value="הסר" action="#{cartBean.removeProduct(item.product.id)}" styleClass="btn-remove" />
+                        </h:column>
+                    </h:dataTable>
+
+                    <div class="cart-summary">
+                        <div class="total-label">סה"כ לתשלום:</div>
+                        <h:panelGroup id="totalPriceArea">
+                            <div class="total-amount">₪<h:outputText value="#{cartBean.totalPrice}"><f:convertNumber pattern="#0.00"/></h:outputText></div>
+                        </h:panelGroup>
+                    </div>
+
+                    <div style="margin-top: 40px; text-align: left;">
+                        <h:commandButton value="אישור ותשלום ✔️" action="#{cartBean.checkout}" styleClass="btn-checkout" />
+                    </div>
+                </h:form>
+            </h:panelGroup>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>בוטיק הקקאו</h3>
+                <p>אנו מתמחים בייצור ושיווק שוקולד בלגי משובח בעבודת יד. כל פרלין מיוצר מחומרי הגלם הטובים ביותר כדי להבטיח חוויה בלתי נשכחת.</p>
+            </div>
+            <div class="footer-section">
+                <h3>צור קשר</h3>
+                <p>📍בן אליעזר 2, בית שמש</p>
+                <p>📞 058-3249199</p>
+                <p>📧 info@cocoaboutique.co.il</p>
+                <p>⏰ א'-ה': 08:00 - 22:00</p>
+            </div>
+            <div class="footer-section">
+                <h3>הישארו מעודכנים</h3>
+                <p>הירשמו לניוזלטר שלנו לקבלת מבצעים:</p>
+                <input type="text" placeholder="הכנס כתובת מייל" class="newsletter-input" />
+                <button class="newsletter-btn">הרשמה</button>
+            </div>
+        </div>
+        <div class="copyright">© 2026 בוטיק הקקאו | כל הזכויות שמורות</div>
+    </div>
+</h:body>
+</html>
