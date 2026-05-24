@@ -15,7 +15,7 @@
     <td width="50%"><b>עגלת הקניות (סל)</b><br/><img src="https://github.com/user-attachments/assets/52412ee6-8f32-4959-baf3-e6464e523cca" width="100%"/></td>
   </tr>
   <tr>
-    <td width="50%" colspan="2" align="center"><b>אישור הזמנה מוצלחת עם חלונית SweetAlert2 ומספר מעקב</b><br/><img src="https://github.com/user-attachments/assets/6228fe85-1f64-48b7-ad4f-0a8c4bcf16e8" width="70%"/></td>
+    <td width="50%" colspan="2" align="center"><b> אישור הזמנה ומספר מעקב  </b><br/><img src="https://github.com/user-attachments/assets/6228fe85-1f64-48b7-ad4f-0a8c4bcf16e8" width="70%"/></td>
   </tr>
 </table>
 
