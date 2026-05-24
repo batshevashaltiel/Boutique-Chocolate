@@ -9,7 +9,6 @@ import com.ecommerce.util.Database;
 
 public class UserDAO {
 
-    // אימות משתמש בהתחברות
     public User validateUser(String email, String password) {
         User user = null;
         String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -24,8 +23,6 @@ public class UserDAO {
                 if (rs.next()) {
                     user = new User();
                     
-                    // --- התיקון הקריטי: חייבים לשלוף את ה-ID! ---
-                    // בלי השורה הזו, ה-ID הוא 0 והסל לא יישמר בחיים
                     user.setId(rs.getInt("id")); 
                     
                     user.setEmail(rs.getString("email"));
@@ -40,7 +37,6 @@ public class UserDAO {
         return user;
     }
 
-    // רישום משתמש חדש
     public boolean registerUser(User user) {
         if (isEmailExists(user.getEmail())) {
             return false;

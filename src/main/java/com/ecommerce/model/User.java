@@ -9,13 +9,11 @@ public class User implements Serializable { // אם הקובץ שלך הוא Users.java, כתבי
     private String email;
     private String password;
     
-    // אלו השדות שהיו חסרים וגרמו לשגיאות:
     private String name;      
     private boolean admin;    
 
     public User() {}
 
-    // --- Getters and Setters ---
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }

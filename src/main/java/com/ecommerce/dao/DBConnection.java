@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 public class DBConnection {
 
-    // הגדרות חיבור - שנה את הסיסמה אם היא לא 1234
     private static final String URL = "jdbc:mysql://localhost:3306/ecommerce_db?serverTimezone=UTC";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "1234"; 

@@ -24,7 +24,6 @@ public class ProductDAO {
         return products;
     }
     
-    // שליפה לפי קטגוריה (עבור הסינון בקטלוג)
     public List<Product> getProductsByCategory(String category) {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM products WHERE category = ?";
@@ -97,7 +96,6 @@ public class ProductDAO {
         return products;
     }
 
-    // --- עדכון הוספה עם קטגוריה ---
     public void addProduct(Product product) {
         String sql = "INSERT INTO products (name, description, price, image_url, quantity, category) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = Database.getConnection();
@@ -112,7 +110,6 @@ public class ProductDAO {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
-    // --- עדכון עריכה עם קטגוריה ---
     public void updateProduct(Product product) {
         String sql = "UPDATE products SET name=?, description=?, price=?, image_url=?, quantity=?, category=? WHERE id=?";
         try (Connection conn = Database.getConnection();
@@ -155,7 +152,6 @@ public class ProductDAO {
         p.setImageUrl(rs.getString("image_url"));
         p.setQuantity(rs.getInt("quantity"));
         
-        // שליפת הקטגוריה (עם הגנה מפני Null)
         String cat = rs.getString("category");
         p.setCategory(cat != null ? cat : "כללי");
         

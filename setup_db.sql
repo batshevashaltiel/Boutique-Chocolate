@@ -2,7 +2,7 @@
 CREATE DATABASE IF NOT EXISTS ecommerce_db;
 USE ecommerce_db;
 
--- 1. טבלת משתמשים (שימי לב: העמודה היא email)
+-- 1. טבלת משתמשים 
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -25,7 +25,7 @@ CREATE TABLE products (
     quantity INT DEFAULT 10
 );
 
--- מוצרים לדוגמה (אלו השמות שמופיעים אצלך בצילומי המסך)
+-- מוצרים לדוגמה (אלו השמות שמופיעים  בצילומי המסך)
 INSERT INTO products (name, price, description, quantity) VALUES 
 ('24K Gold Truffle', 18.0, 'Dark ganache dusted with edible 24k gold leaf', 6),
 ('Salted Caramel Dome', 12.5, 'Milk chocolate shell filled with oozing salted caramel', 9),

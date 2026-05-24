@@ -20,7 +20,6 @@ public class LoginBean implements Serializable {
     private boolean admin = false;
     private boolean loggedIn = false;
 
-    // --- Getters & Setters ---
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
     
@@ -33,7 +32,6 @@ public class LoginBean implements Serializable {
     public boolean isAdmin() { return admin; }
     public boolean isLoggedIn() { return loggedIn; }
 
-    // --- התחברות ---
     public String validateUsernamePassword() {
         UserDAO dao = new UserDAO();
         User user = dao.validateUser(email, password);
@@ -43,14 +41,12 @@ public class LoginBean implements Serializable {
             this.admin = user.isAdmin(); 
             this.name = user.getName(); 
             
-            // שמירה ב-Session
             HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
             session.setAttribute("userEmail", email);
             session.setAttribute("userName", name);
-            session.setAttribute("userId", user.getId()); // חשוב מאוד!
+            session.setAttribute("userId", user.getId()); 
             
-            // --- התיקון החדש: סנכרון הסל ---
-            // ניגשים ל-CartBean ושומרים את המוצרים שנאספו לפני ההתחברות
+          
             try {
                 FacesContext context = FacesContext.getCurrentInstance();
                 CartBean cartBean = (CartBean) context.getApplication()
@@ -60,7 +56,7 @@ public class LoginBean implements Serializable {
                     cartBean.saveLocalCartToDb(user.getId());
                 }
             } catch (Exception e) {
-                e.printStackTrace(); // למקרה של תקלה בסנכרון
+                e.printStackTrace(); 
             }
 
             return "products?faces-redirect=true";
@@ -71,7 +67,6 @@ public class LoginBean implements Serializable {
         }
     }
 
-    // --- הרשמה ---
     public String register() {
         UserDAO dao = new UserDAO();
         
@@ -82,7 +77,6 @@ public class LoginBean implements Serializable {
         newUser.setAdmin(false); 
 
         if (dao.registerUser(newUser)) {
-            // התחברות אוטומטית אחרי הרשמה (זה יקרא לפונקציה למעלה וישמור גם את ה-ID)
             return validateUsernamePassword();
         } else {
             FacesContext.getCurrentInstance().addMessage(null, 
@@ -91,7 +85,6 @@ public class LoginBean implements Serializable {
         }
     }
 
-    // --- יציאה ---
     public String logout() {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         this.loggedIn = false;

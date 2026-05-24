@@ -5,10 +5,9 @@ import java.sql.DriverManager;
 
 public class Database {
 
-    // הגדרות התחברות מרכזיות - משנים רק פה!
     private static final String URL = "jdbc:mysql://localhost:3306/chocolate_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
     private static final String USER = "root";
-    private static final String PASSWORD = "1234"; // שימי את הסיסמה שלך
+    private static final String PASSWORD = "1234"; 
 
     public static Connection getConnection() {
         try {
