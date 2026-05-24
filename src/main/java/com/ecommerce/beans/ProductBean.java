@@ -42,27 +42,20 @@ public class ProductBean implements Serializable {
     }
 
     public void refreshProducts() {
-        // 1. שליפת המוצרים מה-DAO בהתאם לפילטר שנבחר
         if (lowStockFilter) {
             this.cachedProducts = productDAO.getLowStockProducts();
-        } else if (selectedCategoryFilter != null && !selectedCategoryFilter.equals("הכל")) {
-            this.cachedProducts = productDAO.getProductsByCategory(selectedCategoryFilter);
-        } else if (searchTerm != null && !searchTerm.isEmpty()) {
-            this.cachedProducts = productDAO.searchProducts(searchTerm);
         } else {
-            this.cachedProducts = productDAO.getAllProducts();
+            this.cachedProducts = productDAO.getFilteredProducts(selectedCategoryFilter, searchTerm);
         }
 
-        // 2. זיהוי חד-משמעי: האם המשתמש נמצא כרגע פיזית בעמוד הניהול (admin)?
         boolean isManagementPage = false;
         try {
             String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
             if (viewId != null && viewId.contains("admin")) {
                 isManagementPage = true;
             }
-        } catch (Exception e) { /* הגנה למניעת קריסה באתחול הראשוני */ }
+        } catch (Exception e) {}
 
-        // 3. הגנת מלאי ללקוחות: רק אם אנחנו מחוץ לעמוד הניהול (בקטלוג הראשי) - נעלים מוצרים עם מלאי 0
         if (!isManagementPage && this.cachedProducts != null) {
             List<Product> availableOnly = new ArrayList<>();
             for (Product p : this.cachedProducts) {
@@ -117,6 +110,7 @@ public class ProductBean implements Serializable {
     public String getSelectedCategoryFilter() { return selectedCategoryFilter; }
     public void setSelectedCategoryFilter(String selectedCategoryFilter) { 
         this.selectedCategoryFilter = selectedCategoryFilter; 
+        this.searchTerm = null; // כשלוחצים על כפתור קטגוריה, מנקים את שורת החיפוש
         this.lowStockFilter = false;
         refreshProducts();
     }
@@ -130,7 +124,7 @@ public class ProductBean implements Serializable {
     
     public void filterByCategory(String category) {
         this.selectedCategoryFilter = category;
-        this.searchTerm = null;
+        this.searchTerm = null; 
         this.lowStockFilter = false;
         refreshProducts();
     }

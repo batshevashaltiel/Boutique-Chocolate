@@ -12,12 +12,10 @@ public class Product implements Serializable {
     private String imageUrl;
     private int quantity;
     
-    // --- השדה החדש שהיה חסר ---
     private String category; 
 
     public Product() {}
 
-    // --- Getters and Setters ---
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }

@@ -12,7 +12,6 @@ import com.ecommerce.util.Database;
 public class OrderDAO {
 
     public void saveOrder(Order order) {
-        // הוספנו את מספר האישור לשאילתה
         String sql = "INSERT INTO orders (customer_name, total_price, items_summary, status, confirmation_number) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = Database.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -42,7 +41,6 @@ public class OrderDAO {
                 String status = rs.getString("status");
                 o.setStatus(status != null ? status : "התקבל");
                 
-                // שליפת מספר האישור
                 o.setConfirmationNumber(rs.getInt("confirmation_number"));
                 
                 orders.add(o);

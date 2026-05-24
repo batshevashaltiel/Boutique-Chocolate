@@ -13,10 +13,8 @@ public class Order implements Serializable {
     private Date orderDate;
     private String status; 
     
-    // ---> השדה החדש <---
     private int confirmationNumber; 
 
-    // Getters & Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

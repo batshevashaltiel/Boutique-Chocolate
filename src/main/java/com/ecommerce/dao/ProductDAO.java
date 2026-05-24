@@ -57,6 +57,49 @@ public class ProductDAO {
         return products;
     }
 
+   
+    public List<Product> getFilteredProducts(String category, String searchTerm) {
+        List<Product> products = new ArrayList<>();
+        
+        StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE 1=1");
+        
+        boolean hasCategory = (category != null && !category.isEmpty() && !category.equals("הכל"));
+        boolean hasSearch = (searchTerm != null && !searchTerm.trim().isEmpty());
+        
+        if (hasCategory) {
+            sql.append(" AND category = ?");
+        }
+        
+        if (hasSearch) {
+            sql.append(" AND (name LIKE ? OR description LIKE ?)");
+        }
+        
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+            
+            int paramIndex = 1;
+            
+            if (hasCategory) {
+                stmt.setString(paramIndex++, category);
+            }
+            
+            if (hasSearch) {
+                String queryTerm = "%" + searchTerm + "%";
+                stmt.setString(paramIndex++, queryTerm);
+                stmt.setString(paramIndex++, queryTerm);
+            }
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    products.add(mapProduct(rs));
+                }
+            }
+        } catch (SQLException e) { 
+            e.printStackTrace(); 
+        }
+        return products;
+    }
+
     public Product getProductById(int id) {
         Product p = null;
         String sql = "SELECT * FROM products WHERE id = ?";
