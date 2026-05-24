@@ -30,8 +30,8 @@
     <td width="50%"><b>טופס עריכת מוצר קיים</b><br/><img src="https://github.com/user-attachments/assets/57a5a703-eb03-400d-bf60-276f0f0ac19c" width="100%"/></td>
   </tr>
   <tr>
-    <td width="50%"><b>קטלוג מנהל (טבלת CRUD)</b><br/><img src="https://github.com/user-attachments/assets/529ab42a-0b28-4aab-b684-97692518672f" width="100%"/></td>
-    <td width="50%"><b>התראות על מלאי נמוך שעומד לאזול</b><br/><img src="https://github.com/user-attachments/assets/26e56f06-70ee-4d3e-88cb-01e962d06d72" width="100%"/></td>
+    <td width="50%"><b>קטלוג מנהל </b><br/><img src="https://github.com/user-attachments/assets/529ab42a-0b28-4aab-b684-97692518672f" width="100%"/></td>
+    <td width="50%"><b>התראות על מלאי נמוך</b><br/><img src="https://github.com/user-attachments/assets/26e56f06-70ee-4d3e-88cb-01e962d06d72" width="100%"/></td>
   </tr>
 </table>
 
