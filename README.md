@@ -1,4 +1,4 @@
-# 🍫 Cocoa Boutique - Premium Chocolate E-Commerce 
+# Cocoa Boutique - Premium Chocolate E-Commerce 
 ### בוטיק הקקאו - חנות שוקולד פרימיום 
 
 פרויקט גמר דינמי ומלא המדמה חנות בוטיק אינטרנטית לשוקולד בלגי, פטיפורים ומארזים יוקרתיים. 
